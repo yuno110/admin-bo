@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd ">
+
+    <!--    <mybatis-spring:scan base-package="com.prj.bo.**.mapper"/>
+        1.간편 하다
+        2.속성을 통해 직접 설정할 수 있는 옵션이 제한적이다 -->
+
+    <bean id="mapper" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.prj.bo.**.mapper"/><!-- @Mapper 스캔 범위 -->
+
+        <!--
+        1.Deprecated 되었음
+
+        <property name="sqlSessionFactory">
+            <ref bean="sqlSessionFactory"/>
+        </property>
+
+        2.sqlSessionFactoryBeanName 이나 sqlSessionTemplateBeanName 을 사용
+        3.만약 둘 다 지정하지 않으면, Spring은 컨텍스트에서 각각의 타입에 맞는 빈을 자동으로 찾는다
+        4.여러 DataSource를 사용하는 경우나 설정이 복잡한 환경에서 혼란을 방지
+        5..결론은 지정하는게 좋다
+        -->
+
+        <!-- 직접 sqlSessionFactory사용 -->
+        <!--
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        -->
+
+        <!-- sqlSession 객체를 래핑한 sqlSessionTemplate 사용
+             sqlSession의 spring버전
+             스프링과 잘 연동되므로 이걸 사용해라
+        -->
+         <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate" />
+
+    </bean>
+
+
+
+    <!--이런식으로 설정할수도 있다(sqlSessionFactory에서 사용)-->
+<!--    <util:list id="mapperLocations">-->
+<!--        <value>classpath*:sqlmapper/gsretail/**/*-mapper.xml</value>-->
+<!--        <value>classpath*:sqlmapper/cjone/**/*-mapper.xml</value>-->
+<!--        <value>classpath*:sqlmapper/maeil/**/*-mapper.xml</value>-->
+<!--        <value>classpath*:sqlmapper/lotte/**/*-mapper.xml</value>-->
+<!--    </util:list>-->
+
+</beans>

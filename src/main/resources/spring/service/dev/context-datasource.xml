@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="validationQuery" value="SELECT 1 FROM DUAL"/>
+        <property name="testWhileIdle" value="true"/> <!-- 유휴 상태의 연결이 풀에서 유지될 때, 해당 연결이 유효한지 확인 -->
+
+        <!-- 유휴 연결 유효성 검사(제거) 스레드 실행 사이의 시간을 설정 -->
+        <!-- 1.timeBetweenEvictionRunsMillis는 Deprecated됨 -->
+        <!-- 2.durationBetweenEvictionRuns을 사용해야 하나 value값엔 string만 넣을수 있는데 Duration타입을 받기 때문에 xml에서 설정안되는듯 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+
+        <!-- 풀에서 연결이 부족할 때, 연결이 사용 가능해질 때까지 대기할 최대 시간을 설정 -->
+        <!-- 1.maxWaitMillis는 Deprecated됨 -->
+        <!-- 2.maxWait을 사용해야 하나 value값엔 string만 넣을수 있는데 Duration타입을 받기 때문에 xml에서 설정안되는듯 -->
+        <property name="maxWaitMillis" value="1000"/>
+
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"><!-- sqlSessionFactory를 생성한다 -->
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:spring/service/mybatis-config.xml"/>
+        <property name="mapperLocations" value="classpath:mapper/**/*.xml"/>
+    </bean>
+
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate"><!-- sqlSession의 구현체 -->
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean>
+
+</beans>
